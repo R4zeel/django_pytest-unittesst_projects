@@ -15,7 +15,12 @@ class TestRoutes(TestCase):
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Лев Толстой')
         cls.not_author_user = User.objects.create(username='Не Автор')
-        cls.note = Note.objects.create(title='Заголовок', text='Текст', author_id=cls.author.id, slug='title')
+        cls.note = Note.objects.create(
+            title='Заголовок',
+            text='Текст',
+            author_id=cls.author.id,
+            slug='title'
+        )
 
     def test_availability_for_edit_and_delete(self):
         users_statuses = (

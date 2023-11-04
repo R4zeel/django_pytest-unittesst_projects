@@ -1,7 +1,7 @@
 from pytest_django.asserts import assertRedirects
 from django.urls import reverse
 
-from news.models import News, Comment
+from news.models import Comment
 
 from http import HTTPStatus
 
@@ -53,7 +53,11 @@ def test_author_can_delete_note(author_client, comment, comments_pk_for_args):
     assert Comment.objects.count() == 0
 
 
-def test_other_user_cant_delete_note(admin_client, form_data, comments_pk_for_args):
+def test_other_user_cant_delete_note(
+        admin_client,
+        form_data,
+        comments_pk_for_args
+):
     url = reverse('news:delete', args=(comments_pk_for_args,))
     response = admin_client.post(url)
     assert response.status_code == HTTPStatus.NOT_FOUND
