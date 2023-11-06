@@ -66,8 +66,6 @@ def multiple_comments(author, news):
     return comments
 
 
-
-
 @pytest.fixture
 def comments_pk_for_args(comment):
     return comment.pk

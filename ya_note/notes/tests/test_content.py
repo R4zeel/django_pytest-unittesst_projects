@@ -51,5 +51,8 @@ class TestAddNotePage(TestCase):
             with self.subTest(user=self.author_client, name=name):
                 url = reverse(name, args=args)
                 response = self.author_client.get(url)
-                self.assertEqual(isinstance(response.context['form'], NoteForm), True)
+                self.assertEqual(
+                    isinstance(response.context['form'], NoteForm),
+                    True
+                )
                 self.assertIn('form', response.context)

@@ -48,7 +48,11 @@ def test_other_user_cant_edit_comment(admin_client, form_data, comment):
     assert comment.text == comment_from_db.text
 
 
-def test_author_can_delete_comment(author_client, comment, comments_pk_for_args):
+def test_author_can_delete_comment(
+        author_client,
+        comment,
+        comments_pk_for_args
+):
     url = reverse('news:delete', args=(comments_pk_for_args,))
     success_url = reverse('news:detail', args=(comment.news_id,))
     response = author_client.post(url)
