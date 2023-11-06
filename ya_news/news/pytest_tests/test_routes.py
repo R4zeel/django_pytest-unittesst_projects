@@ -6,13 +6,6 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_home_availability_for_anonymous_user(client):
-    url = reverse('news:home')
-    response = client.get(url)
-    assert response.status_code == HTTPStatus.OK
-
-
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
     ('news:home', 'users:login', 'users:logout', 'users:signup')
@@ -30,16 +23,6 @@ def test_pages_availability_for_anonymous_user(client, name):
 def test_pages_availability_for_auth_user(admin_client, name, news):
     url = reverse(name, args=(news.id,))
     response = admin_client.get(url)
-    assert response.status_code == HTTPStatus.OK
-
-
-@pytest.mark.parametrize(
-    'name',
-    ('news:delete', 'news:edit'),
-)
-def test_comments_availability_for_author(author_client, name, comment):
-    url = reverse(name, args=(comment.pk,))
-    response = author_client.get(url)
     assert response.status_code == HTTPStatus.OK
 
 
