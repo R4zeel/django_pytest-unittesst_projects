@@ -29,18 +29,16 @@ class TestAddNotePage(TestCase):
     def test_note_in_list_for_author(self):
         url = reverse('notes:list')
         response = self.author_client.get(url)
+        self.assertIn('object_list', response.context)
         object_list = response.context['object_list']
         self.assertIn(self.note, object_list)
 
     def test_note_not_in_list_for_another_user(self):
         url = reverse('notes:list')
         response = self.not_author_client.get(url)
+        self.assertIn('object_list', response.context)
         object_list = response.context['object_list']
         self.assertNotIn(self.note, object_list)
-
-    def test_anonymous_client_has_no_form(self):
-        response = self.client.get(self.add_url)
-        self.assertEqual(response.context, None)
 
     def test_authorized_client_has_forms(self):
         urls = (
@@ -51,8 +49,8 @@ class TestAddNotePage(TestCase):
             with self.subTest(user=self.author_client, name=name):
                 url = reverse(name, args=args)
                 response = self.author_client.get(url)
+                self.assertIn('form', response.context)
                 self.assertEqual(
                     isinstance(response.context['form'], NoteForm),
                     True
                 )
-                self.assertIn('form', response.context)

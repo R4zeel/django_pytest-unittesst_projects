@@ -73,6 +73,6 @@ def test_comments_order(client, multiple_comments, news):
     assert 'news' in response.context
     news = response.context['news']
     all_comments = news.comment_set.all()
-    for index in range(len(all_comments)-1):
+    for index in range(len(all_comments) - 1):
         assert (all_comments[index].created
-                < all_comments[index+1].created)
+                < all_comments[index + 1].created)

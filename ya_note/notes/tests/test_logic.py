@@ -74,6 +74,10 @@ class TestNoteEditDelete(TestCase):
             'text': cls.NOTE_UPDATED_TEXT,
             'slug': cls.NOTE_SLUG,
         }
+        cls.form_data_without_slug = {
+            'title': cls.NOTE_TITLE,
+            'text': cls.NOTE_UPDATED_TEXT,
+        }
         cls.objects_count_with_data = Note.objects.count()
 
     def test_author_can_delete_note(self):
@@ -117,14 +121,16 @@ class TestNoteEditDelete(TestCase):
 
     def test_slug_auto_fill(self):
         url = reverse('notes:add')
-        self.edit_form_data.pop('slug')
-        response = self.author_client.post(url, data=self.edit_form_data)
+        response = self.author_client.post(
+            url,
+            data=self.form_data_without_slug
+        )
         self.assertRedirects(response, reverse('notes:success'))
         note_count = Note.objects.count()
         self.assertEqual(note_count, self.objects_count_with_data + 1)
         new_note = Note.objects.get(
-            title=self.edit_form_data['title'],
+            title=self.form_data_without_slug['title'],
             author=self.author
         )
-        expected_slug = slugify(self.edit_form_data['title'])
+        expected_slug = slugify(self.form_data_without_slug['title'])
         self.assertEqual(new_note.slug, expected_slug)
