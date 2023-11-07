@@ -58,9 +58,15 @@ def multiple_comments(author, news):
         Comment.objects.create(
             news=news, author=author, text=f'Tекст {index}',
         )
-        for index in range(2)
+        for index in range(10)
     ]
-    for index in range(2):
+    # Опирался на конструкцию ниже исходя из теоретических материалов,
+    # логика была описана так: при создании нельзя редактировать
+    # поле со временем, поэтому сначала создаём, потом в каждом
+    # объекте уже меняем значение отдельно, даже с большим кол-вом
+    # комментариев тесты вроде проходят по такой конструкции.
+    # Или это всё равно не правильно?
+    for index in range(10):
         comments[index].created = now + timedelta(days=index)
         comments[index].save()
     return comments

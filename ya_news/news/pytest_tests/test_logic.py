@@ -73,9 +73,10 @@ def test_other_user_cant_delete_comment(
 
 def test_user_cant_use_bad_words(author_client, news):
     comments_count_before_post = Comment.objects.count()
-    bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[0]}, еще текст'}
     url = reverse('news:detail', args=(news.pk,))
-    response = author_client.post(url, data=bad_words_data)
-    assertFormError(response, 'form', 'text', errors=WARNING)
+    for i in range(len(BAD_WORDS)):
+        bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[i]}, еще текст'}
+        response = author_client.post(url, data=bad_words_data)
+        assertFormError(response, 'form', 'text', errors=WARNING)
     comments_count = Comment.objects.count()
     assert comments_count == comments_count_before_post
