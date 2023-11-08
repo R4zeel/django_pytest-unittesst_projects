@@ -71,12 +71,17 @@ def test_other_user_cant_delete_comment(
     assert Comment.objects.count() == 1
 
 
-def test_user_cant_use_bad_words(author_client, news):
+@pytest.mark.parametrize(
+    'word',
+    (
+        [i for i in BAD_WORDS]
+    )
+)
+def test_user_cant_use_bad_words(word, author_client, news):
     comments_count_before_post = Comment.objects.count()
     url = reverse('news:detail', args=(news.pk,))
-    for i in range(len(BAD_WORDS)):
-        bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[i]}, еще текст'}
-        response = author_client.post(url, data=bad_words_data)
-        assertFormError(response, 'form', 'text', errors=WARNING)
+    bad_words_data = {'text': f'Какой-то текст, {word}, еще текст'}
+    response = author_client.post(url, data=bad_words_data)
+    assertFormError(response, 'form', 'text', errors=WARNING)
     comments_count = Comment.objects.count()
     assert comments_count == comments_count_before_post

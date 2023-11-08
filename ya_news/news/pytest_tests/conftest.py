@@ -1,5 +1,6 @@
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from random import randint
 
 from django.conf import settings
 from django.utils import timezone
@@ -34,7 +35,7 @@ def multiple_news(news):
         News(
             title=f'Новость {index}',
             text='Просто текст.',
-            date=today - timedelta(days=index)
+            date=date(today.year, today.month, randint(1, 28))
         )
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     ]
@@ -60,14 +61,8 @@ def multiple_comments(author, news):
         )
         for index in range(10)
     ]
-    # Опирался на конструкцию ниже исходя из теоретических материалов,
-    # логика была описана так: при создании нельзя редактировать
-    # поле со временем, поэтому сначала создаём, потом в каждом
-    # объекте уже меняем значение отдельно, даже с большим кол-вом
-    # комментариев тесты вроде проходят по такой конструкции.
-    # Или это всё равно не правильно?
     for index in range(10):
-        comments[index].created = now + timedelta(days=index)
+        comments[index].created = now + timedelta(hours=randint(1, 24))
         comments[index].save()
     return comments
 

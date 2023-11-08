@@ -22,13 +22,13 @@ def test_pages_contains_form(author_client, name, args):
 @pytest.mark.parametrize(
     'name, args',
     (
-        ('news:edit', pytest.lazy_fixture('comments_pk_for_args')),
+        ('news:detail', pytest.lazy_fixture('comments_pk_for_args')),
     )
 )
 def test_anonymous_client_has_no_form(client, name, args):
     url = reverse(name, args=(args,))
     response = client.get(url)
-    assert response.context is None
+    assert 'form' not in response.context
 
 
 @pytest.mark.parametrize(
@@ -49,12 +49,13 @@ def test_news_count(client, multiple_news):
 @pytest.mark.parametrize(
     'client',
     (
-        (pytest.lazy_fixture('admin_client'),)
+        (pytest.lazy_fixture('admin_client')),
     )
 )
 def test_news_order(client, multiple_news):
     url = reverse('news:home')
     response = client.get(url)
+    assert 'news_feed' in response.context
     object_list = response.context['news_feed']
     all_dates = [news.date for news in object_list]
     sorted_dates = sorted(all_dates, reverse=True)
@@ -72,7 +73,8 @@ def test_comments_order(client, multiple_comments, news):
     response = client.get(url)
     assert 'news' in response.context
     news = response.context['news']
-    all_comments = news.comment_set.all()
-    for index in range(len(all_comments) - 1):
-        assert (all_comments[index].created
-                < all_comments[index + 1].created)
+    all_comments = [
+        comment.created for comment in news.comment_set.all()
+    ]
+    sorted_comments = sorted(all_comments)
+    assert all_comments == sorted_comments
