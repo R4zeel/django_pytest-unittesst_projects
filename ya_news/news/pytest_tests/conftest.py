@@ -39,6 +39,12 @@ def multiple_news(news):
         )
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     ]
+    test_news = News(
+            title='А нОвость', 
+            text='А пРосто текст',
+            date=(datetime(year=2021, month=1, day=1))
+        )
+    all_news.append(test_news)
     return News.objects.bulk_create(all_news)
 
 

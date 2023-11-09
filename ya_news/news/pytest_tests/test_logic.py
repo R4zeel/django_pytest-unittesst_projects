@@ -74,7 +74,7 @@ def test_other_user_cant_delete_comment(
 @pytest.mark.parametrize(
     'word',
     (
-        [i for i in BAD_WORDS]
+        [BAD_WORDS]
     )
 )
 def test_user_cant_use_bad_words(word, author_client, news):
